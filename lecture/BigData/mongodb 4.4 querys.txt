@@ -1,0 +1,617 @@
+db.fruit.insertMany([{"_id" : 0, "name" : "apple"},
+{"_id" : 1, "name" : "banana"},
+{"_id" : 1, "name" : "orange"},
+{"_id" : 2, "name" : "cherry"}])
+
+db.fruit.insertMany([{"_id" : 3, "name" : "orange"},
+{"_id" : 4, "name" : "cherry"},
+{"_id" : 4, "name" : "strawberry"},
+{"_id" : 5, "name" : "tomato"}],
+{"ordered" : false})
+
+db.restaurant.insertMany([
+{ "_id" : 1, "name" : "Central Perk Cafe", "Borough" : "South Korea" }, 
+{ "_id" : 2, "name" : "Rock A Feller Bar", "Borough" : "Queens"}, 
+{ "_id" : 3, "name" : "Empire State Pub", "Borough" : "Brooklyn"}
+])
+
+db.restaurant.replaceOne(
+{ "name" : "Central Perk Cafe" },
+{ "name" : "Central Pork Cafe", "Borough" : "Manhattan" }
+)
+
+db.restaurant.replaceOne(
+{ "name" : "Pizza Rat's Pizzaria" },
+{ "_id": 4, "name" : "Pizza Rat's Pizzaria", "Borough" : "Manhattan"},
+{ upsert: true }
+)
+
+db.people1.update(
+{"name" : "kim"},
+{"$inc" : {"age" : 10}}
+)
+
+db.products.insert({
+  _id: 1,
+  sku: "abc123",
+  quantity: 10,
+  metrics: {
+    orders: 2,
+    ratings: 3.5
+  }
+})
+
+db.people.updateOne(
+{ "_id" : ObjectId("62b15394fc996f1db444f124") },
+{ $set: { hobby: "Piano" } }
+)
+
+db.people.updateOne(
+{ "name" : "Lee Eun Jin" },
+{ $set: { hobby: ["Piano", "Make Coffee", "Watch Movie"] } }
+)
+
+db.students.insertOne( { _id: 1, scores: [ 44, 78, 38, 80 ] } )
+
+db.students.updateOne(
+   { _id: 1 },
+   { $push: { scores: 89 } }
+)
+
+db.people.updateOne(
+   { name: "Lee Eun Jin" },
+   { $push: { Address: { Si : "Seoul", Gu : "Jongno-gu", Dong : "Sajik-dong"} } }
+)
+
+db.students.insertOne(
+   {
+      "_id" : 2,
+      "quizzes" : [
+         { "wk": 1, "score" : 10 },
+         { "wk": 2, "score" : 8 },
+         { "wk": 3, "score" : 5 },
+         { "wk": 4, "score" : 6 }
+      ]
+   }
+)
+
+db.students.updateOne(
+   { _id: 2 },
+   {
+     $push: {
+       quizzes: {
+          $each: [ { wk: 5, score: 8 }, { wk: 6, score: 7 }, { wk: 7, score: 6 } ],
+          $sort: { score: -1 },
+          $slice: 3
+       }
+     }
+   }
+)
+
+db.fruit.insertOne({ _id: 1, item: "fruit", type: [ "apple", "banana" ] })
+
+db.fruit.update(
+   { _id: 1 },
+   { $addToSet: { type: "orange" } }
+)
+
+db.fruit.update(
+   { _id: 1 },
+   { $addToSet: { type: { $each : ["apple", "strawberry", "orange"] } } }
+)
+
+db.students.update( { _id: 1 }, { $pop: { scores: 1 } } )
+db.students.update( { _id: 1 }, { $pop: { scores: -1 } } )
+
+db.fruit.updateOne({}, {"$pull" : {"type" : "strawberry"}})
+
+db.number.insertOne({_id:1, number: [1, 2, 3, 2, 3, 2, 3] })
+
+db.number.updateOne({}, {"$pull" : {"number" : 3}})
+
+db.blog.updateOne({"comments.author" : "John"}, {"$inc" : {"comments.0.votes" : 1}})
+
+db.blog.updateOne({"comments.author" : "John"}, {"$inc" : {"comments.$.votes" : 1}})
+
+db.people1.updateOne( { "age" : 40 }, { "$inc" : { "age" : 3 } }, {"upsert" : true} )
+
+db.people1.updateOne( { "age" : 40 }, { "$inc" : { "age" : 3 } } )
+
+db.users.insertMany( [
+{ birthday: "10/13/1978" },
+{ birthday: "10/13/1978" },
+{ birthday: "10/13/1980" } ] )
+
+db.users.updateMany( { "birthday" : "10/13/1978" }, {"$set" : { "gift" : "Birthday updateMany Test" } } )
+
+db.scores.insertMany( [
+   { _id: 6305, name : "A. MacDyver", "assignment" : 5, "points" : 24 },
+   { _id: 6319, name : "R. Stiles", "assignment" : 2, "points" : 12 },
+   { _id: 6322, name : "A. MacDyver", "assignment" : 2, "points" : 14 },
+   { _id: 6234, name : "R. Stiles", "assignment" : 1, "points" : 10 }
+] )
+
+db.scores.findOneAndDelete( { "name" : "A. MacDyver" }, { sort : { "points" : 1 } } )
+
+db.students2.insert([
+   {
+      "_id" : 1,
+      "grades" : [
+         { "grade" : 80, "mean" : 75, "std" : 6 },
+         { "grade" : 85, "mean" : 90, "std" : 4 },
+         { "grade" : 85, "mean" : 85, "std" : 6 }
+      ]
+   },
+   {
+      "_id" : 2,
+      "grades" : [
+         { "grade" : 90, "mean" : 75, "std" : 6 },
+         { "grade" : 87, "mean" : 90, "std" : 3 },
+         { "grade" : 85, "mean" : 85, "std" : 4 }
+      ]
+   }
+])
+
+db.scores.insertMany([
+   { "_id" : 1, "team" : "Fearful Mallards", "score" : 25000 },
+   { "_id" : 2, "team" : "Tactful Mooses", "score" : 23500 },
+   { "_id" : 3, "team" : "Aquatic Ponies", "score" : 19250 },
+   { "_id" : 4, "team" : "Cuddly Zebras", "score" : 15235 },
+   { "_id" : 5, "team" : "Garrulous Bears", "score" : 18000 }
+])
+
+db.scores.findOneAndReplace(
+   { "score" : { $lt : 22250 } },
+   { "team" : "Therapeutic Hamsters", "score" : 22250 },
+   { sort : { "score" : 1 }, projection: { "_id" : 0, "team" : 1 } }
+)
+
+db.users.insertMany( [
+{ birthday: new Date("10/12/1978") },
+{ birthday: new Date("10/12/1978") },
+{ birthday: new Date("10/12/1980") } ] )
+
+db.people1.find( { 
+$or : 
+[ { age : { $in : [25, 22] } }, 
+{name : "park"} ] 
+} )
+
+db.people1.find( { age: { $not: { $lte: 40 } } } )
+
+db.people1.find( { age: { $not: { $mod: [5, 0] } } } )
+
+db.nullcol.insertMany([
+{ "_id" : 1, "y" : null },
+{ "_id" : 2, "y" : 1 },
+{ "_id" : 3, "y" : 2 }
+])
+
+db.nullcol.find()
+ 
+db.nullcol.find({ y : null })
+
+db.nullcol.find({ x : null })
+
+db.nullcol.find( { y : { $eq : null, $exists : true } } )
+
+db.regexcol.insertMany([
+{ "_id" : 1, "sku" : "abc123", "description" : "Single line description." },
+{ "_id" : 2, "sku" : "abc789", "description" : "First line\nSecond line" },
+{ "_id" : 3, "sku" : "xyz456", "description" : "Many spaces before     line" },
+{ "_id" : 4, "sku" : "xyz789", "description" : "Multiple\nline description" }
+])
+
+db.regexcol.find( { sku: { $regex: /789$/ } } )
+
+db.regexcol.find( { description: { $regex: /^S/, $options: 'm' } } )
+
+db.fruit.insertOne( { "_id" : 2, "item" : "fruit", "type" : [ "apple", "banana", "cherry" ] } )
+db.fruit.insertOne( { "_id" : 3, "item" : "fruit", "type" : [ "strawberry", "banana", "cherry" ] } )
+db.fruit.insertOne( { "_id" : 4, "item" : "fruit", "type" : [ "orange", "banana", "apple" ] } )
+
+db.fruit.updateOne( { _id : 2 }, { $pull : { type : "apple" } } )
+
+db.fruit.updateOne( 
+{ _id : 3 }, 
+{ $pull : { type : { $in : ["strawberry", "banana"] } } }
+)
+
+db.slicecol.insertOne( { _id : 1, item : "shirt", details : { colors: [ "blue", "red" ], sizes: [ "S", "M", "L", "XL", "XXL"] } } )
+
+db.slicecol.find().pretty()
+
+db.slicecol.find( { }, { "details.sizes" : { $slice : [2, 3] } } ).pretty()
+
+db.testcol.insertMany([
+{"x" : 5},
+{"x" : 15},
+{"x" : 25},
+{"x" : [5, 25]}
+])
+
+db.grade.insert({ _id : 1, korean : "A", english: "B", maths : "A+", science : "A" })
+db.grade.insert({ _id : 2, korean : "B", english: "B", maths : "A+", science : "B" })
+db.grade.insert({ _id : 3, korean : "C", english: "A+", maths : "A+", science : "A" })
+
+db.grade.find({ $where: function() { return (this.korean == this.science) }}).pretty();
+
+db.grade.find({ $where: function() { return (this.english == this.maths) }}).pretty();
+
+db.grade.find( { $where: "obj.english == obj.maths" } ).pretty();
+
+db.grade.find( { $expr: "this.english == this.maths" } ).pretty()
+
+for(i=0; i<100; i++) { db.collection.insertOne( {x : i} ); }
+var cursor = db.collection.find();
+
+cursor.next()
+cursor.next()
+cursor.next()
+cursor.next()
+
+for (i=0; i<1000000; i++) {
+   db.users.insertOne(
+      {
+         "i" : i,
+         "username" : "user"+i,
+         "age" : Math.floor(Math.random()*120),
+         "created" : new Date()
+       }
+   );
+}
+
+db.users.find({"username" : "user950000"}).explain("executionStats")
+
+db.users.find({}, {"_id" : 0, "i" : 0, "created" : 0})
+
+[0, "user100020"] -> 8623513776
+[0, "user1002"] -> 8599246768
+[0, "user100388"] -> 8623560880
+...
+[0, "user100414"] -> 8623564208
+[1, "user100113"] -> 8623525680
+[1, "user100280"] -> 8623547056
+[1, "user100551"] -> 8623581744
+...
+[1, "user100626"] -> 8623591344
+[2, "user100191"] -> 8623535664
+[2, "user100195"] -> 8623536176
+[2, "user100197"] -> 8623536432
+
+db.users.find({}, {"_id" : 0, "i" : 0, "created" : 0}).sort({age: 1, username: 1})
+
+db.users.find({"age" : 21}, {"_id" : 0, "i" : 0, "created" : 0}).sort({username: -1}).collation({locale: "en_US", numericOrdering: true})
+
+db.users.find({"age" : {"$gte" : 21, "$lte" : 30}}).sort({"username" : 1})
+
+db.students.createIndex({class_id: 1})
+
+db.students.find({student_id:{$gt:5000}, class_id:54}).sort({student_id:1}).explain("executionStats")
+
+db.students.find({student_id:{$gt:5000}, class_id:54}).sort({student_id:1}).hint({student_id:1, class_id:1}).explain("executionStats")
+
+db.places.insertOne({
+   loc : { type: "Point", coordinates: [ 126.9195, 37.3919 ] },
+   name: "Anyang University",
+   category : "University"})
+
+db.places.createIndex( { loc : "2dsphere" } )
+
+db.places.find(
+   {
+     loc: {
+       $geoIntersects: {
+          $geometry: {
+             type: "Polygon" ,
+             coordinates: [
+               [ [ 126.919, 37.3917 ], [ 126.9202, 37.3918 ], [ 126.9204, 37.3924 ], [ 126.919, 37.3925 ], [ 126.919, 37.3917 ] ]
+             ]
+          }
+       }
+     }
+   }
+)
+
+db.places.find(
+   {
+     loc: {
+       $geoWithin: {
+          $geometry: {
+             type: "Polygon" ,
+             coordinates: [
+               [ [ 126.919, 37.3917 ], [ 126.9202, 37.3918 ], [ 126.9204, 37.3924 ], [ 126.919, 37.3925 ], [ 126.919, 37.3917 ] ]
+             ]
+          }
+       }
+     }
+   }
+)
+
+mongoimport --db test --collection neighborhoods --host "localhost:27017" --file ./neighborhoods.json
+mongoimport --db test --collection restaurants --host "localhost:27017" --file ./restaurants.json
+
+db.neighborhoods.createIndex({location:"2dsphere"})
+
+db.restaurants.createIndex({location:"2dsphere"})
+
+db.neighborhoods.find({name: "Clinton"}).pretty().limit(1)
+
+db.restaurants.find({name: "Little Pie Company"}).pretty().limit(1)
+
+db.neighborhoods.findOne({
+   geometry: {
+      $geoIntersects: {
+         $geometry: {
+            type:"Point",
+            coordinates :   [-73.93414657,40.82302903] }
+         }
+      }
+   }
+)
+
+var neighborhood = db.neighborhoods.findOne({
+   geometry: {
+      $geoIntersects: {
+         $geometry: {
+            type:"Point",
+            coordinates :   [-73.93414657,40.82302903] }
+         }
+      }
+   }
+)
+
+db.restaurants.find({
+   location: {
+      $geoWithin: {
+         $geometry: neighborhood.geometry
+      }
+   }
+}, {name: 1, _id: 0}
+)
+
+db.restaurants.find({
+   location: {
+      $geoWithin: {
+         $centerSphere: [
+            [-73.93414657,40.82302903],
+            5/3963.2
+         ]
+      }
+   }
+})
+
+db.restaurants.find({
+   location: {
+      $nearSphere: {
+         $geometry: { 
+            type: "Point",
+            coordinates: [-73.93414657,40.82302903]
+         },
+         $maxDistance : 5 * 1609.34
+      }
+   }
+})
+
+db.places.find({
+   "loc.coorinates": {
+      $geoWithin: {
+      $box: [[126.9173, 37.3909], [126.9223, 37.3953]]
+      }
+   }
+})
+
+db.legacyplaces.createIndex({"location" : "2d"})
+
+db.legacyplaces.find({
+   location: {
+      $geoWithin: {
+      $box: [[126.9173, 37.3909], [126.9223, 37.3953]]
+      }
+   }
+})
+
+db.legacyplaces.find({
+   location: {
+      $geoWithin: {
+         $polygon: [ [126.9209, 37.3911] , [126.9197, 37.3937], [126.9172, 37.3907]]
+      }
+   }
+})
+
+db.legacyplaces.find({
+   location: {
+      $geoWithin: {
+         $centerSphere: [ [126.909, 37.385] , 5 / 6379.1]
+      }
+   }
+})
+
+db.legacyplaces.find({
+   location: {
+      $geoWithin: {
+         $centerSphere: [ [126.909, 37.385] , 1 / 6379.1]
+      }
+   }
+})
+
+db.legacyplaces.insert({
+  name: 'Anyang Central Market',
+  location: [ 126.9196, 37.3967 ]
+})
+
+db.legacyplaces.find( { "location" : { "$near" : [ 126.922, 37.4027  ] } } )
+
+db.stores.insertMany([
+     { _id: 1, name: "Java Hut", description: "Coffee and cakes" },
+     { _id: 2, name: "Burger Buns", description: "Gourmet hamburgers" },
+     { _id: 3, name: "Coffee Shop", description: "Just coffee" },
+     { _id: 4, name: "Clothes Clothes Clothes", description: "Discount clothing" },
+     { _id: 5, name: "Java Shopping", description: "Indonesian goods" }
+])
+
+db.stores.find(
+   { $text: { $search: "java coffee shop" } },
+   { score: { $meta: "textScore" } }).sort( { score: { $meta: "textScore" } } )
+
+db.ttlcol.insert( { "createdAt" : new Date(), "logEvent" : 2, "logmessage" : "true" })
+
+db.ttlcol.createIndex( {"createdAt" : 1 }, { expireAfterSeconds : 120 } )
+
+print(new Date())
+
+db.ttlcol.getIndexes()
+
+mongoimport --db test --collection companies --host "localhost:27017" --file ./companies.json
+
+db.companies.find({name:"Facebook"}).pretty().limit(1)
+
+db.companies.aggregate([
+{$match: {founded_year: 2004}},
+])
+
+db.companies.aggregate([
+   {$match: {founded_year: 2004}},
+   {$project: {
+      _id: 0,
+      name: 1,
+      founded_year: 1
+   }}
+])
+
+db.companies.aggregate([
+   { $match: { founded_year: 2004 } },
+   { $sort: { name: 1} },
+   { $limit: 5 },
+   { $project: {
+      _id: 0,
+      name: 1 } }
+])
+
+db.companies.aggregate([
+   {$match: {"funding_rounds.investments.financial_org.permalink" : "greylock" }},
+   {$project: {
+      _id: 0,
+      name: 1,
+      ipo: "$ipo.pub_year",
+      valuation: "$ipo.valuation_amount",
+      funders: "$funding_rounds.investments.financial_org.permalink"
+   }}
+]).pretty()
+
+db.companies.aggregate([
+   {$match: {"funding_rounds.investments.financial_org.permalink" : "greylock" }}
+]).pretty()
+
+db.companies.aggregate([
+   {$match: { "name" : "Facebook" } }
+]).pretty()
+
+db.inventory.insertMany([
+  { "_id" : 1, "item" : "ABC", price: NumberDecimal("80"), "sizes": [ "S", "M", "L"] },
+  { "_id" : 2, "item" : "EFG", price: NumberDecimal("120"), "sizes" : [ ] },
+  { "_id" : 3, "item" : "IJK", price: NumberDecimal("160"), "sizes": "M" },
+  { "_id" : 4, "item" : "LMN" , price: NumberDecimal("10") },
+  { "_id" : 5, "item" : "XYZ", price: NumberDecimal("5.75"), "sizes" : null }
+])
+
+db.inventory.aggregate( [ { $unwind: "$sizes" } ] )
+
+db.favuser.insertMany([
+{ "_id" : 1, "name" : "dave123", favorites: [ "chocolate", "cake", "butter", "apples" ] },
+{ "_id" : 2, "name" : "li", favorites: [ "apples", "pudding", "pie" ] },
+{ "_id" : 3, "name" : "ahn", favorites: [ "pears", "pecans", "chocolate", "cherries" ] },
+{ "_id" : 4, "name" : "ty", favorites: [ "ice cream" ] }
+])
+
+db.favuser.aggregate([
+   { $project: { name: 1, twoFavorites: { $slice: [ "$favorites", 2 ] } } }
+])
+
+db.favuser.aggregate([
+   { $project: { name: 1, twoFavorites: { $slice: [ "$favorites", 2, 3 ] } } }
+])
+
+db.inventory.aggregate([
+   {
+      $project: {
+         item: 1,
+         numberOfsizes: { $cond: { if: { $isArray: "$sizes" }, then: { $size: "$sizes" }, else: "NA"} }
+      }
+   }
+] )
+
+db.companies.aggregate([
+   { $match: { "funding_rounds": { $exists: true, $ne: [ ] } } },
+   { $project: {
+      _id: 0,
+      name: 1,
+      largest_round: { $max: "$funding_rounds.raised_amount" }
+   } }
+])
+
+db.companies.aggregate([
+   { $group: {
+      _id: { founded_year: "$founded_year" },
+      average_number_of_employees: { $avg: "$number_of_employees" }
+   } },
+   { $sort: { average_number_of_employees: -1 } }
+])
+
+
+db.companies.aggregate([
+   { $match: { founded_year: { $gte: 2012 } } },
+   { $group: {
+      _id: { founded_year: "$founded_year"},
+      companies: { $push: "$name" }
+   } },
+   { $sort: { "_id.founded_year": 1 } }
+]).pretty()
+
+db.sales.insertMany([
+{"_id" : 1, "item" : "AAA", "price" : 10, "quantity" : 2, "date" : new Date("2022-01-01")},
+{"_id" : 2, "item" : "BBB", "price" : 20, "quantity" : 1, "date" : new Date("2022-09-01")},
+{"_id" : 3, "item" : "CCC", "price" : 5, "quantity" : 5, "date" : new Date("2022-05-01")},
+{"_id" : 4, "item" : "BBB", "price" : 10, "quantity" : 10, "date" : new Date("2022-02-01")},
+{"_id" : 5, "item" : "AAA", "price" : 5, "quantity" : 10, "date" : new Date("2022-03-01")},
+{"_id" : 6, "item" : "AAA", "price" : 5, "quantity" : 5, "date" : new Date("2022-11-01")},
+{"_id" : 7, "item" : "CCC", "price" : 5, "quantity" : 10, "date" : new Date("2022-04-01")}
+])
+
+db.sales.aggregate(
+   [
+     { $sort: { item: 1, date: 1 } },
+     {
+       $group:
+         {
+           _id: "$item",
+           firstSale: { $first: "$date" }
+         }
+     }
+   ]
+)
+
+db.sales.aggregate(
+   [
+     { $sort: { item: 1, date: 1 } },
+     {
+       $group:
+         {
+           _id: "$item",
+           firstSale: { $last: "$date" }
+         }
+     }
+   ]
+)
+
+
+
+
+
+
+
+
+
+
+
+
